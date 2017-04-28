@@ -1,11 +1,15 @@
 import React from 'react'
-import {crel, div,h2} from 'teact'
 require './styles.scss'
+import {crel, div,h2} from 'teact'
+import Collateral from './containers/Collateral/'
+
+
 
 class App extends React.Component
   render: ->
+    {store} = @props
     div className: "app", ->
-      h2 "dfsdfsfs"
+      crel Collateral, store: store
 
 
 export default App

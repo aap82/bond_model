@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom';
 
 import { AppContainer } from 'react-hot-loader';
 import App from '../App';
+import collateralStore from '../store/collateral/Collateral';
+
+
 
 const render = (Component) => {
   ReactDOM.render(
   <AppContainer>
-    <Component/>
+    <Component store={collateralStore}/>
   </AppContainer>,
     document.getElementById('root')
   );

@@ -11,7 +11,7 @@ HTMLWebpackPlugin = require 'html-webpack-plugin'
 DEV_SERVER_HOST = getenv 'DEV_SERVER_HOST'
 DEV_SERVER_PORT = getenv 'DEV_SERVER_PORT'
 DEV_SERVER_URL = 'http://' + DEV_SERVER_HOST + ':' + DEV_SERVER_PORT
-
+BOOTSWATCH_URL = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/slate/bootstrap.min.css"
 
 
 devConfig =
