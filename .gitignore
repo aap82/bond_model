@@ -3,3 +3,4 @@
 /.happypack/
 /.idea/
 /yarn-error.log
+/yarn.lock
