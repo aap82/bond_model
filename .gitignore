@@ -2,3 +2,4 @@
 /node_modules/
 /.happypack/
 /.idea/
+/yarn-error.log

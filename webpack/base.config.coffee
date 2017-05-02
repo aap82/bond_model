@@ -2,17 +2,17 @@ path = require('path')
 paths = require '../config/paths.coffee'
 
 module.exports =
-  context: paths.src
+  context: paths.root
   resolve:
     alias:
-      app: paths.src + '/'
       stores: paths.stores + '/'
       styles: paths.styles + '/'
       components: paths.components + '/'
-      components: paths.containers + '/'
+      containers: paths.containers + '/'
     modules: [
       "node_modules",
-      "#{path.src}"
+      "#{paths.web}"
+      "#{paths.models}"
     ]
     extensions: [
       '.js'

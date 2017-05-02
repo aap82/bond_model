@@ -1,17 +1,25 @@
 { GQC } = require 'graphql-compose'
-{LoanTC} = require '../models/graphql'
+{LoanTapeTC, LoanDetailTC, DealSettingsTC, DealTC} = require '../models/graphql'
 
 
 
 GQC.rootQuery().addFields({
-  loan: LoanTC.getResolver('findOne')
-  loans: LoanTC.getResolver('findMany')
+  deal: DealTC.getResolver('findOne')
+  deals: DealTC.getResolver('findMany')
+  dealSettings: DealSettingsTC.getResolver('findOne')
+  loan: LoanTapeTC.getResolver('findOne')
+  loans: LoanTapeTC.getResolver('findMany')
 })
 
 
 GQC.rootMutation().addFields({
-  loan: LoanTC.getResolver('findOne')
-  loans: LoanTC.getResolver('findMany')
+  createDeal: DealTC.get('$createOne')
+  editDeal: DealTC.get('$updateById')
+
+
+  createLoan: LoanTapeTC.get('$createOne')
+  editLoan: LoanTapeTC.get('$updateById')
+
 })
 
 

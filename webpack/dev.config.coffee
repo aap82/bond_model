@@ -10,8 +10,13 @@ HappyPack = require('happypack')
 HTMLWebpackPlugin = require 'html-webpack-plugin'
 DEV_SERVER_HOST = getenv 'DEV_SERVER_HOST'
 DEV_SERVER_PORT = getenv 'DEV_SERVER_PORT'
+
+APP_SERVER_HOST = getenv 'SERVER_HOST'
+APP_SERVER_PORT = getenv 'SERVER_PORT'
+GRAPHQL_ENDPOINT = getenv 'GRAPHQL_ENDPOINT'
+
 DEV_SERVER_URL = 'http://' + DEV_SERVER_HOST + ':' + DEV_SERVER_PORT
-BOOTSWATCH_URL = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/slate/bootstrap.min.css"
+APP_SERVER_URL = 'http://' + '0.0.0.0'+ ':' + APP_SERVER_PORT + '/graphql'
 
 
 devConfig =
@@ -20,7 +25,7 @@ devConfig =
       "react-hot-loader/patch"
       "webpack-dev-server/client?#{DEV_SERVER_URL}"
       'webpack/hot/only-dev-server'
-      "#{paths.entry.dev}"
+      "#{paths.entry.js}"
     ]
     vendor: [
       'react'
@@ -38,6 +43,7 @@ devConfig =
   devtool: 'inline-source-map'
 
   devServer:
+    historyApiFallback: yes
     hot: yes
     host: "#{DEV_SERVER_HOST}"
     contentBase: paths.builds.dev
@@ -47,11 +53,17 @@ devConfig =
     publicPath: '/'
     quiet: no
     filename: 'bundle.js'
+    proxy:
+      '/graphql':
+        target: GRAPHQL_ENDPOINT
+        changeOrigin: yes
+        pathRewrite:
+          '^/graphql': ''
 
   module:
     rules: [
-      { test: /\.coffee$/, use: [ 'babel-loader', 'coffee-loader' ], exclude: /node_modules/ ,include: paths.src }
-      { test: /\.(js|jsx)$/, loader: ['happypack/loader?id=js'], exclude: /node_modules/ , include: paths.src},
+      { test: /\.coffee$/, loader: ['happypack/loader?id=coffee'], exclude: /node_modules/ } # ,include: paths.src }
+      { test: /\.(js|jsx)$/, loader: ['happypack/loader?id=js'], exclude: /node_modules/ } #, include: paths.src},
       { test: /\.(css|scss)$/, use: ['style-loader','css-loader', 'sass-loader'] }
     ]
   plugins: [
@@ -65,6 +77,11 @@ devConfig =
       id: 'js'
       loaders: [ 'babel-loader' ],
     })
+    new HappyPack({
+      id: 'coffee'
+      loaders: [ 'babel-loader', 'coffee-loader'  ],
+    })
+
     new webpack.HotModuleReplacementPlugin()
     new webpack.NamedModulesPlugin()
     new webpack.NoEmitOnErrorsPlugin()

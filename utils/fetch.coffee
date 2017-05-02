@@ -8,6 +8,7 @@ module.exports = (graphqlUrl) =>
     vars = vars or {}
     body =
       variables: vars
+    console.log body
     if type is 'query'
       body.query = input
     if type is 'opName'
@@ -18,11 +19,11 @@ module.exports = (graphqlUrl) =>
     defaults opts,
       method: 'POST'
       headers: new Headers
+
     # default headers
     headers = opts.headers
     if !headers.get('content-type')
       opts.headers.append 'content-type', 'application/json'
     fetch(graphqlUrl, opts).then (res) ->
-#      console.log res
       res.json()
 
