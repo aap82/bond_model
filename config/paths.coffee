@@ -17,10 +17,13 @@ module.exports =
   components:     path.join root, 'web', 'components'
   containers:     path.join root, 'web', 'containers'
   entry:
-    js:          path.join root, 'web', 'entry', 'index.js'
+    js:           path.join root, 'web', 'entry', 'index.js'
     html:         path.join root, 'web', 'entry', 'index.html'
+    server:       path.join root, 'server', 'index.coffee'
 
   builds:
-    dev:          path.join root, 'build'
+    dev:
+      client:     path.join root, 'build'
+      server:     path.join root, 'build', 'server'
     prod:         path.join root, 'dist'
 

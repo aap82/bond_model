@@ -1,5 +1,7 @@
 composeWithMongoose = require('graphql-compose-mongoose').default
 DealSettings = require './mongoose'
 
+exports = module.exports
 
-module.exports = composeWithMongoose(DealSettings)
+exports.TC =
+  DealSettingsTC: composeWithMongoose(DealSettings)

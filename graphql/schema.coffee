@@ -1,10 +1,13 @@
 { GQC } = require 'graphql-compose'
-{LoanTapeTC, LoanDetailTC, DealSettingsTC, DealTC} = require '../models/graphql'
+models = require '../models/graphql'
+{LoanTapeTC, DealSettingsTC, DealTC, DealMasterTC} = models.TCs
 
 
 
 GQC.rootQuery().addFields({
+  dealSummary: DealMasterTC.getResolver('findMany')
   deal: DealTC.getResolver('findOne')
+  dealById:  DealTC.getResolver('findById')
   deals: DealTC.getResolver('findMany')
   dealSettings: DealSettingsTC.getResolver('findOne')
   loan: LoanTapeTC.getResolver('findOne')
@@ -13,9 +16,10 @@ GQC.rootQuery().addFields({
 
 
 GQC.rootMutation().addFields({
-  createDeal: DealTC.get('$createOne')
-  editDeal: DealTC.get('$updateById')
-
+  dealCreate: DealTC.getResolver('createOne')
+  dealAddToMaster: DealMasterTC.getResolver('createOne')
+  dealUpdate: DealTC.getResolver('updateById')
+  dealDelete: DealTC.getResolver('removeById')
 
   createLoan: LoanTapeTC.get('$createOne')
   editLoan: LoanTapeTC.get('$updateById')

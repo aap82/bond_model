@@ -30,23 +30,20 @@ devConfig =
     vendor: [
       'react'
       'react-dom'
-      'mobx'
-      'mobx-react'
       'teact'
     ]
 
   output:
     filename: '[name].js'
-    path: paths.builds.dev
+    path: paths.builds.dev.client
     publicPath: '/'
 
   devtool: 'inline-source-map'
 
   devServer:
-    historyApiFallback: yes
     hot: yes
     host: "#{DEV_SERVER_HOST}"
-    contentBase: paths.builds.dev
+    contentBase: paths.builds.dev.client
     port: DEV_SERVER_PORT
     inline: yes
     noInfo: no
@@ -59,7 +56,7 @@ devConfig =
         changeOrigin: yes
         pathRewrite:
           '^/graphql': ''
-
+    historyApiFallback: yes
   module:
     rules: [
       { test: /\.coffee$/, loader: ['happypack/loader?id=coffee'], exclude: /node_modules/ } # ,include: paths.src }
@@ -68,7 +65,7 @@ devConfig =
     ]
   plugins: [
     new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('development')})
-    new CleanWebpackPlugin(['build'], {
+    new CleanWebpackPlugin(['build/client'], {
       root: paths.root
       verbose: true,
       dry: false,

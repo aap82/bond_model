@@ -1,5 +1,5 @@
 async = require('asyncawait/async')
-await = require('asyncawait/await')
+awaits = require('asyncawait/await')
 compose = require  'koa-compose'
 
 compress = require  'koa-compress'
@@ -8,7 +8,7 @@ compress = require  'koa-compress'
 exports.baseErrorHandling = ->
   async (ctx, next) =>
     try
-      await next()
+      awaits next()
     catch err
       console.error "BASE ERROR HANDLING: #{err.name} : #{err.message}"
       ctx.body = { name: err.name, message: err.message, stack: err.stack }

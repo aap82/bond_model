@@ -8,7 +8,10 @@
   "dependencies": {
     "101": "^1.6.2",
     "asyncawait": "^1.0.6",
+    "coffeescript": "next",
     "dotenv": "^4.0.0",
+    "formsy-react": "^0.19.2",
+    "formsy-semantic-ui-react": "^0.2.3",
     "getenv": "^0.7.0",
     "graphql": "^0.9.5",
     "graphql-compose": "^1.18.1",
@@ -24,6 +27,7 @@
     "koa2": "^2.0.0-alpha.7",
     "mobx": "^3.1.9",
     "mobx-react": "^4.1.8",
+    "mobx-react-form": "^1.31.9",
     "mobx-react-router": "^4.0.1",
     "mobx-utils": "^2.0.1",
     "mongoose": "^4.9.6",
@@ -31,9 +35,11 @@
     "react-dom": "^15.5.4",
     "react-router-dom": "^4.1.1",
     "semantic-ui-react": "^0.68.2",
-    "teact": "^1.2.0"
+    "teact": "^1.2.0",
+    "validatorjs": "^3.12.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -50,6 +56,7 @@
     "css-loader": "^0.28.0",
     "happypack": "^3.0.3",
     "html-webpack-plugin": "^2.28.0",
+    "mobx-react-devtools": "^4.2.11",
     "node-sass": "^4.5.2",
     "nodemon": "^1.11.0",
     "react-hot-loader": "next",
@@ -62,6 +69,7 @@
   "scripts": {
     "dev-app-server": "NODE_ENV=development nodemon --watch server --watch graphql --watch models --watch utils server/index.coffee",
     "dev-web-server": "webpack-dev-server --config ./webpack/dev.config.coffee",
-    "dev": "run-p \"dev-app-server\" \"dev-web-server\""
+    "dev": "run-p \"dev-app-server\" \"dev-web-server\"",
+    "test": "babel-node server/index.js"
   }
 }

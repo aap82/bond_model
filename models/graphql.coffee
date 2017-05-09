@@ -1,4 +1,20 @@
-exports.LoanTapeTC = require './loan_tape/graphql'
-exports.LoanDetailTC = require './loan_detail/graphql'
-exports.DealSettingsTC = require './deal_settings/graphql'
-exports.DealTC = require './deal/graphql'
+LoanTape = require './loan_tape/graphql'
+DealSettings = require './deal_settings/graphql'
+Deal = require './deal/graphql'
+
+merge = require 'lodash/merge'
+flatten = require 'lodash/flatten'
+
+exports = module.exports
+
+exports.queries = flatten [
+    Deal.queriesANDmutations
+    LoanTape.queries
+  ]
+
+
+
+exports.TCs = merge {},
+  Deal.TC
+  DealSettings.TC
+  LoanTape.TC

@@ -3,13 +3,12 @@ import {crel, div, h2 } from 'teact'
 import {inject, observer} from 'mobx-react'
 import Page from '../../components/Page'
 
-Home = observer(class Home extends React.Component
-  constructor: (props) ->
-    super props
+class Home extends React.Component
+  componentWillMount: ->
+    console.log 'Hi'
 
   render: ->
-    h2 'HELLO'
-)
 
+    h2 'HEsdfsfsdsffLLO'
 
 export default Home

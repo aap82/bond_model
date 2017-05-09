@@ -1,13 +1,14 @@
 getenv = require('getenv')
-graphQLoptions = require '../graphql'
 { graphqlKoa, graphiqlKoa  } = require 'graphql-server-koa'
+graphQLoptions = require '../graphql'
+
+
 
 
 
 Router = require 'koa-router'
 
 graphql = new Router
-
 
 
 graphql.post('/graphql', graphqlKoa(graphQLoptions))

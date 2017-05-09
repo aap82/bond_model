@@ -7,8 +7,10 @@ module.exports =
     alias:
       stores: paths.stores + '/'
       styles: paths.styles + '/'
+      models: paths.models + '/'
       components: paths.components + '/'
       containers: paths.containers + '/'
+      forms: paths.web + '/forms/'
     modules: [
       "node_modules",
       "#{paths.web}"

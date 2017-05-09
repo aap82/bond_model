@@ -9,18 +9,26 @@ import {configureStores} from '../store';
 import gqlFetch from '../../utils/fetch';
 
 const browserHistory = createBrowserHistory();
-const stores = configureStores(gqlFetch('./graphql'))
-const history = syncHistoryWithStore(browserHistory, stores.routing);
+const fetch = gqlFetch('./graphql')
 
+const routingStore = new RouterStore()
+const stores = configureStores(fetch, routingStore)
+const history = syncHistoryWithStore(browserHistory, routingStore);
+import { configureDevtool } from 'mobx-react-devtools'
 import App from '../App';
 
+configureDevtool({
+    logEnabled: false,
+    updatesEnabled: true,
+    // logFilter: change => change.type !== 'reaction'
+})
 const render = (Component) => {
   ReactDOM.render(
     <AppContainer>
       <Provider {...stores}>
-          <Router history={history}>
+        <Router history={history} >
             <Component />
-          </Router>
+        </Router>
       </Provider>
     </AppContainer>,
 
@@ -33,6 +41,7 @@ render(App);
 // Hot Module Replacement API
 if (module.hot) {
   module.hot.accept('../App', () => {
-    render(App)
+      const NextApp = require('../App').default
+      render(NextApp)
   });
 }

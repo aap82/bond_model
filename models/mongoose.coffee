@@ -1,4 +1,5 @@
+{DealModel, DealMasterModel} = require './deal/mongoose'
 exports.LoanTape = require './loan_tape/mongoose'
-exports.LoanDetail = require './loan_detail/mongoose'
-exports.Deal = require './deal/mongoose'
+exports.DealModel = DealModel
+exports.DealMasterModel = DealMasterModel
 exports.DealSettings = require './deal_settings/mongoose'
