@@ -1,22 +1,56 @@
 import React from 'react'
-import {crel, div, h1, h3, h2, h5, text } from 'teact'
+import {crel, div, h1, h3, h2, h5, text, br } from 'teact'
 import {inject, observer} from 'mobx-react'
 import { Grid, Segment } from 'semantic-ui-react'
 import {ToolBarDefault} from './ToolBar'
+import Card from 'components/Card'
+import LoanTable from './LoanTable'
 
 
-DealSettings = observer(({deal})->
+LoansSection = observer(({model}) ->
+  div className: 'row top', ->
+    crel Card,
+      as: 'h1'
+      width: 12
+      title: 'Loans', ->
+        switch model.deal.length
+          when 0
+            div 'Upload Loans'
+          else
+            crel LoanTable, model: model
+
+
+
+
+
+)
+
+
+
+DealSettings = observer(({deal, model})->
   div ->
     switch deal._id
       when null then null
       else
-        crel Segment,
-          compact: yes
-          ->
-            h1 "#{deal.name.toUpperCase()}"
-            div ->
-              text "Type: "
-              text "#{deal.type}"
+        div ->
+          h1 "#{deal.name.toUpperCase()}"
+          text "Type: "
+          text "#{deal.type}"
+
+        div className: 'row top', ->
+          crel Card,
+            title: 'Settings', ->
+              div 'HELLO'
+              div 'HELLO'
+              div 'HELLO'
+          crel Card,
+            title: 'Settings', ->
+              div 'HELLO'
+              div 'HELLO'
+              div 'HELLO'
+        br()
+        crel LoansSection, model: model
+
 )
 
 class ModelViewEntry extends React.Component
@@ -55,7 +89,8 @@ class ModelViewEntry extends React.Component
         onLoadDealSubmit: @loadDeal
         onCloseDeal: @closeDeal
       div style: padding: 5, =>
-        crel DealSettings, deal: deal
+        crel DealSettings, deal: deal, model: model
+
 
 
 

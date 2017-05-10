@@ -7,25 +7,25 @@ class Model
       deal: new Deal()
       settings: null
       deals: []
-      loans: []
+      loans: observable.shallowArray []
       bonds: []
 
 
-      loadDeal: action('Loading Deal', (deal) ->
+      loadDeal: action('Loading Deal', ((deal) ->
         runInAction(=>
           @deal.update(deal)
           @settings = deal.settings
           @loans.replace(deal.loans)
           @bonds.replace(deal.bonds)
-        )
+        ))
       )
-      closeDeal: action('Closing Deal', (deal) ->
+      closeDeal: action('Closing Deal', ((deal) ->
         runInAction(=>
           @deal.reset()
           @settings = null
           @loans.clear()
           @bonds.clear()
-        )
+        ))
       )
 
 

@@ -68,7 +68,8 @@ ToolBarDefault = observer(({
     h1 "Model Page"
     crel Menu,
       inverted: yes,
-      floated: 'right', =>
+      floated: 'right',
+      =>
         switch model.deal._id
           when null
             crel ControlledPopup,
