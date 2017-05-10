@@ -6,79 +6,6 @@ import numeral from 'numeral'
 import {keys} from 'lodash'
 
 
-EditingCell = observer(class EditingCell extends React.Component
-  componentDidMount: =>
-    @focus()
-  focus: =>    @textInput.focus()
-  render: ->
-    {editing, onChange, className} = @props
-    td className: className + ' editing-cell', =>
-      div className: 'ui fluid tiny transparent input focus', =>
-        crel 'input',
-          placeholder: editing.value,
-          value: editing.value,
-          ref: ((input) =>
-            @textInput = input
-          ),
-          className: className,
-          onChange: onChange
-)
-
-
-
-
-
-SelectedCell = observer(({editing, property, row, onClick, onChange, className}) ->
-  switch editing.isEditing
-    when no
-      td onClick: onClick, className: className + ' selected-cell', "#{row[property]}"
-    else
-      crel EditingCell,
-        onChange: onChange
-        className: className
-        editing: editing
-
-
-)
-
-TableCell = observer(({row, property, rowID, editing, onClick, onChange, className, onStartEditing}) ->
-  isSelected = expr(-> editing.row is rowID and editing.column is property)
-  handleClick = ((e)=>
-    e.preventDefault
-    onClick(rowID, property)
-  )
-  switch isSelected
-    when no
-      td onClick: handleClick, className: className, "#{row[property]}"
-    else
-      crel SelectedCell,
-        property: property,
-        onClick: onStartEditing,
-        row: row
-        className: className
-        editing: editing
-        onChange: onChange
-)
-
-
-
-TableHeader = observer(({columns}) ->
-  console.log 'render column'
-  tr ->
-    for key, column of columns
-      className = if column.align? then "#{column.align} aligned" else ''
-      th className: className, "#{column.header}"
-)
-
-
-TableRow = observer(({editing, rowID, children, onCancel}) ->
-  isEditing = expr(-> editing.row is rowID)
-  className = if isEditing then 'active' else ''
-  tr className: className,
-    children
-)
-
-
 
 class TableContainer extends React.Component
   constructor: (props) ->
@@ -103,7 +30,6 @@ class TableContainer extends React.Component
         )
       )
       handleCellSelect: action((row, column) =>
-        console.log row
         runInAction(=>
           document.addEventListener('keydown', @handleKeyboardInput)
           @active.row = row
@@ -222,13 +148,13 @@ class TableContainer extends React.Component
         for row, i in rows
           crel TableRow, editing: @active, rowID: i, onCancel: @handleInputCancel, =>
             for key, column of columns
-
               className = if column.align? then "#{column.align} aligned" else ''
               crel TableCell,
+                column: column
                 editing: @active
                 rowID: i
                 property: key,
-                type: column.type
+                format: column.format
                 className: className,
                 row: row,
                 onStartEditing: @startEditing
@@ -241,4 +167,82 @@ class TableContainer extends React.Component
 
 export default TableContainer
 
+
+
+EditingCell = observer(class EditingCell extends React.Component
+  componentDidMount: =>
+    @focus()
+  focus: =>    @textInput.focus()
+  render: ->
+    {editing, onChange, className} = @props
+    td className: className + ' editing-cell', =>
+      div className: 'ui fluid tiny transparent input focus', =>
+        crel 'input',
+          placeholder: editing.value,
+          value: editing.value,
+          ref: ((input) =>
+            @textInput = input
+          ),
+          className: className,
+          onChange: onChange
+)
+
+
+
+
+
+SelectedCell = observer(({editing, onClick, onChange, className, value}) ->
+  switch editing.isEditing
+    when no
+      td onClick: onClick, className: className + ' selected-cell', "#{value()}"
+    else
+      crel EditingCell,
+        onChange: onChange
+        className: className
+        editing: editing
+
+
+)
+
+TableCell = observer(({column, format = null, row, property, rowID, editing, onClick, onChange, className, onStartEditing}) ->
+  isSelected = expr(-> editing.row is rowID and editing.column is property)
+  handleClick = ((e)=>
+    e.preventDefault
+    onClick(rowID, property)
+  )
+  getValue = =>
+    if column.type is 'number'
+      value = numeral(row[property]).format(format)
+    else
+      row[property]
+
+  switch isSelected
+    when no
+      td onClick: handleClick, className: className, "#{getValue()}"
+    else
+      crel SelectedCell,
+        property: property,
+        onClick: onStartEditing,
+        className: className
+        editing: editing
+        onChange: onChange
+        value: getValue
+)
+
+
+
+TableHeader = observer(({columns}) ->
+  tr ->
+    for key, column of columns
+      className = if column.align? then "#{column.align} aligned" else ''
+      th className: className, "#{column.header}"
+)
+
+
+TableRow = observer(({editing, rowID, children}) ->
+  isEditing = expr(-> editing.row is rowID)
+  className = if isEditing then 'active' else ''
+  tr className: className,
+    children
+)
 
