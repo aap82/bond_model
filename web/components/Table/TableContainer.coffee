@@ -55,9 +55,10 @@ class TableContainer extends React.Component
       
       handleInputChange: action((e) =>@active.value = e.target.value)
       handleInputSubmit: action(=>
-        runInAction(=>                
-          @props.rows[@active.row][@active.column] = @active.value
+        runInAction(=>
+          @props.handleChange(@active)
           @active.isEditing = no
+
         )
       )
 
@@ -174,11 +175,11 @@ EditingCell = observer(class EditingCell extends React.Component
     @focus()
   focus: =>    @textInput.focus()
   render: ->
-    {editing, onChange, className} = @props
+    {editing, onChange, className, placeholder} = @props
     td className: className + ' editing-cell', =>
       div className: 'ui fluid tiny transparent input focus', =>
         crel 'input',
-          placeholder: editing.value,
+          placeholder: placeholder(),
           value: editing.value,
           ref: ((input) =>
             @textInput = input
@@ -200,6 +201,7 @@ SelectedCell = observer(({editing, onClick, onChange, className, value}) ->
         onChange: onChange
         className: className
         editing: editing
+        placeholder: value
 
 
 )
@@ -223,6 +225,7 @@ TableCell = observer(({column, format = null, row, property, rowID, editing, onC
       crel SelectedCell,
         property: property,
         onClick: onStartEditing,
+        row: row
         className: className
         editing: editing
         onChange: onChange

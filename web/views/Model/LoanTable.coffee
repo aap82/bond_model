@@ -63,9 +63,16 @@ class LoanTable extends React.Component
         align: 'right'
         type: 'number'
 
+  handleChange: (changes) =>
+    {row, column, value} = changes
+    @props.model.loans[row][column] =value
+
   render: ->
     {model} = @props
-    crel TableContainer, rows: model.loans, columns: @columns
+    crel TableContainer,
+      rows: model.loans,
+      columns: @columns,
+      handleChange: @handleChange
 
 
 
