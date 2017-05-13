@@ -2,6 +2,7 @@
 
 @import 'styles/flexbox-grid.scss';
 @import 'styles/data-grid-overrides';
+@import 'styles/sematantic_ui_overrides';
 
 
 html {
@@ -27,15 +28,6 @@ html, body, #root {
   overflow-y:auto;
   background-color: #212121;
 
-}
-.ms-Nav-chevronButton,
-.ms-Nav-compositeLink {
-
-  background-color: inherit!important;
-}
-.ms-Nav-chevronButton,
-.ms-Nav-compositeLink > a {
-  color: white;
 }
 
 .z-depth-0 {
@@ -77,37 +69,27 @@ h1, h2, h3, h4, h5, h6 {
 
 }
 
-.ui.selection.dropdown {
-  padding: 0 !important;
-}
 
 
 
-.ui.segment {
+
+.selected-cell {
   padding: {
-    right: 0.5rem!important;
-    left: 0.5rem!important;
-    top: 0.5rem!important;
-    bottom: 0.5rem!important;
+    bottom: 4px!important;
   }
 
-}
-.ui.attached.header {
-  border-radius: 0px!important;
-  padding: {
-    right: 0.025rem!important;
-    left: 0.25rem!important;
-    top: 0.1rem!important;
-    bottom: 0.1rem!important;
+
+
+  border-bottom: {
+    width: 1px;
+    style: solid;
+    color: blue;
   }
 }
 
 .editing-cell {
   padding: {
     left: 0.45rem!important;
-    bottom: 0.25rem!important;
-  }
-  margin: {
     bottom: 3px!important;
   }
   border-bottom: {
@@ -115,12 +97,5 @@ h1, h2, h3, h4, h5, h6 {
     width: 1px;
     color: red;
   }
-}
 
-.selected-cell {
-  border-bottom: {
-    style: solid;
-    width: 1px;
-    color: blue;
-  }
 }

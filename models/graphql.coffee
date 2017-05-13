@@ -9,7 +9,7 @@ exports = module.exports
 
 exports.queries = flatten [
     Deal.queriesANDmutations
-    LoanTape.queries
+    LoanTape.queriesANDmutations
   ]
 
 

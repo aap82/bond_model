@@ -9,8 +9,8 @@ module.exports =
   graphql:        path.join root, 'graphql'
   server:         path.join root, 'server'
   models:         path.join root, 'models'
+  utils:          path.join root, 'utils'
   web:            path.join root, 'web'
-
   app:            path.join root, 'web', 'app'
   styles:         path.join root, 'web', 'styles'
   stores:         path.join root, 'web', 'stores'

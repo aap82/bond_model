@@ -1,13 +1,20 @@
 import mobx, {extras,extendObservable, observable, computed, runInAction, action, toJS} from 'mobx'
 import {Deal} from 'models/deal/mobx'
+import {TableColumn, Tables} from './tables/Tables'
+import loanTableColumns from 'models/loan_tape/data_table'
+
+
+
+
+
 
 class Model
-  constructor: ->
+  constructor: (loanTableColumns)->
     extendObservable @, {
       deal: new Deal()
       settings: null
       deals: []
-      loans: observable.shallowArray []
+      loans: []
       bonds: []
 
 
@@ -27,13 +34,17 @@ class Model
           @bonds.clear()
         ))
       )
-
-
     }
 
+    @tables = new Tables({
+      loans:
+        columns: (new TableColumn(key, column) for key, column of loanTableColumns)
+        rows: @loans
+    })
 
 
-model = new Model()
+
+model = new Model(loanTableColumns)
 
 
 

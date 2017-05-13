@@ -59,7 +59,7 @@ devConfig =
     historyApiFallback: yes
   module:
     rules: [
-      { test: /\.coffee$/, loader: ['happypack/loader?id=coffee'], exclude: /node_modules/ } # ,include: paths.src }
+      { test: /\.coffee$/, use: [ 'babel-loader', 'coffee-loader'  ], exclude: /node_modules/ }  #{ test: /\.coffee$/, loader: ['happypack/loader?id=coffee'], exclude: /node_modules/ } # ,include: paths.src }
       { test: /\.(js|jsx)$/, loader: ['happypack/loader?id=js'], exclude: /node_modules/ } #, include: paths.src},
       { test: /\.(css|scss)$/, use: ['style-loader','css-loader', 'sass-loader'] }
     ]
@@ -74,10 +74,10 @@ devConfig =
       id: 'js'
       loaders: [ 'babel-loader' ],
     })
-    new HappyPack({
-      id: 'coffee'
-      loaders: [ 'babel-loader', 'coffee-loader'  ],
-    })
+#    new HappyPack({
+#      id: 'coffee'
+#      loaders: [ 'babel-loader', 'coffee-loader'  ],
+#    })
 
     new webpack.HotModuleReplacementPlugin()
     new webpack.NamedModulesPlugin()

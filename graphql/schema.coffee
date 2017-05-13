@@ -21,8 +21,8 @@ GQC.rootMutation().addFields({
   dealUpdate: DealTC.getResolver('updateById')
   dealDelete: DealTC.getResolver('removeById')
 
-  createLoan: LoanTapeTC.get('$createOne')
-  editLoan: LoanTapeTC.get('$updateById')
+  loanCreate: LoanTapeTC.getResolver('createOne')
+  loanUpdate: LoanTapeTC.getResolver('updateById')
 
 })
 

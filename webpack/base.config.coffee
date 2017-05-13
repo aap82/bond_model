@@ -11,6 +11,7 @@ module.exports =
       components: paths.components + '/'
       containers: paths.containers + '/'
       forms: paths.web + '/forms/'
+      utils:  paths.utils + '/'
     modules: [
       "node_modules",
       "#{paths.web}"

@@ -19,7 +19,7 @@ import App from '../App';
 
 configureDevtool({
     logEnabled: false,
-    updatesEnabled: true,
+    updatesEnabled: false,
     // logFilter: change => change.type !== 'reaction'
 })
 const render = (Component) => {

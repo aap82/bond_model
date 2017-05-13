@@ -10,7 +10,7 @@ exports.TC =
 
 {loanTapeSummaryFragment, loanTapeDetailsFragment} = require './fragments'
 
-exports.queries = [
+exports.queriesANDmutations = [
   "#{loanTapeSummaryFragment}
     query getLoans {
       loans {
@@ -25,4 +25,14 @@ exports.queries = [
         ...loanDetail
       }
     }"
+
+
+  "mutation loanUpdate($loan: UpdateByIdLoanTapeInput!) {
+    loanUpdate(record: $loan) {
+      recordId
+
+    }
+  }"
+
+
 ]

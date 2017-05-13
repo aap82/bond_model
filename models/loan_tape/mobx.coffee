@@ -74,37 +74,76 @@ export class Deal
 
 
 
-
-class DealStore
-  @deal
-  @gql
-  constructor: (gql) ->
-    @gql = gql
-    @deal = new Deal
+export class LoanActions
+  constructor: (@gql) ->
     extendObservable @, {
-      isLoadingDeals: no
-
-      deals: observable.shallowArray([])
-      getDeals: action('Fetch deals from server', (->
-        @isLoadingDeals = yes
-        @gql.query('opName', 'getDeals').then((data) =>
-            runInAction(=>
-              @deals.replace(data.deal) if data isnt null
-              @isLoadingDeals = no
-            )
+      isUpdatingLoan: no
+      loanUpdate: action('UpdateLoanData', (loan) ->
+        @isUpdatingloan = yes
+        @gql.query('opName', 'loanUpdate', loan: loan).then((data) =>
+          console.log data
+          runInAction(=>
+            @isUpdatingloan = no
+            if data?
+              return yes
+            else
+              return no
           )
         )
       )
-
-      createDeal: action('Create New Deal', ((props) ->
-          @deals.push deal
-          @deal = deal
-          return
-      ))
+#
+#      isFetchingDeal: no
+#      dealGetByID: action('Fetching Deal By ID', (id) ->
+#        @isFetchingDeal = yes
+#        @gql.query('opName', 'dealGetByID', id: id).then((data) =>
+#          runInAction(=>
+#            @isFetchingDeal = no
+#            if data.dealById?
+#              return data.dealById
+#            else
+#              return null
+#          )
+#        )
+#      )
+#
+#
+#
+#
+#      isCreatingDeal: no
+#      dealCreate: action('Create New Deal', (props) ->
+#        props.dealID = uuidV4()
+#        @isCreatingDeal = yes
+#        @gql.mutation('dealCreate', deal: props).then((data) =>
+#          runInAction(=>
+#            @isCreatingDeal = no
+#            if data?
+#              @addToMaster(data.dealCreate.record)
+#              return data.dealCreate.record
+#            else
+#              return no
+#          )
+#        )
+#      )
+#
+#      isAddingDeal: no
+#      addToMaster: action('Add Deal to Master Mapping', ({dealID, name, _id, type}) ->
+#        @isAddingDeal = yes
+#        props =
+#          dealID: dealID
+#          name: name
+#          lastUsed: _id
+#          mappings:
+#            type: type
+#            typeID: _id
+#        @gql.mutation('dealAddToMaster', deal: props).then((data) =>
+#          console.log data
+#          @isAddingDeal = no
+#          return
+#        )
+#      )
     }
-    @getDeals()
 
-export default DealStore
+
 
 
 

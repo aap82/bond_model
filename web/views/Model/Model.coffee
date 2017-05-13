@@ -77,11 +77,22 @@ class ModelViewEntry extends React.Component
     @props.model.closeDeal()
 
 
+  handleClick: (e) =>
+    {tables} = @props.model
+    return unless tables.isCellSelected
+
+    tables.unSelectCell()
+#    tables.doneEditing() if tables.isEditing
+
+
+
+
+
   render: ->
     {model, app} = @props
     {toolbar} = app
     {deal} = model
-    div =>
+    div onClick: @handleClick, style: height: '100vh', =>
       crel ToolBarDefault,
         toolbar: toolbar
         model: model
