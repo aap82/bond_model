@@ -81,7 +81,6 @@ export class LoanActions
       loanUpdate: action('UpdateLoanData', (loan) ->
         @isUpdatingloan = yes
         @gql.query('opName', 'loanUpdate', loan: loan).then((data) =>
-          console.log data
           runInAction(=>
             @isUpdatingloan = no
             if data?

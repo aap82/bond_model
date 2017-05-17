@@ -11,11 +11,13 @@ import gqlFetch from '../../utils/fetch';
 const browserHistory = createBrowserHistory();
 const fetch = gqlFetch('./graphql')
 
+
 const routingStore = new RouterStore()
 const stores = configureStores(fetch, routingStore)
 const history = syncHistoryWithStore(browserHistory, routingStore);
 import { configureDevtool } from 'mobx-react-devtools'
 import App from '../App';
+
 
 configureDevtool({
     logEnabled: false,
@@ -25,7 +27,7 @@ configureDevtool({
 const render = (Component) => {
   ReactDOM.render(
     <AppContainer>
-      <Provider {...stores}>
+      <Provider  {...stores}>
         <Router history={history} >
             <Component />
         </Router>
@@ -45,3 +47,4 @@ if (module.hot) {
       render(NextApp)
   });
 }
+

@@ -8,6 +8,11 @@ ModalContainer = inject('modal')(observer(class ModalContainer extends React.Com
   constructor: (props) ->
     super props
 
+  onClose: () ->
+    console.log 'closing'
+    @props.modal.closeModal()
+
+
   render: ->
     {modal} = @props
     if modal.isOpen is no
@@ -25,9 +30,6 @@ ModalContainer = inject('modal')(observer(class ModalContainer extends React.Com
 
 
 
-  onClose: =>
-    console.log 'closing'
-    @props.modal.closeModal()
 
 
 ))

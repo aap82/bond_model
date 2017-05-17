@@ -12,14 +12,14 @@ class TableBody extends React.Component
     super props
 
 
-  onContextMenu:  (e) =>
-    console.log 'context menu'
-    return unless @props.contextMenu?
-    {tables} = @props
-    return unless tables.selected.rows.length > 0
-    e.stopPropagation()
-    e.preventDefault()
-    console.log 'context menu'
+    @onContextMenu =  (e) ->
+      console.log 'context menu'
+      return unless @props.contextMenu?
+      {tables} = @props
+      return unless tables.selected.rows.length > 0
+      e.stopPropagation()
+      e.preventDefault()
+      console.log 'context menu'
 
 
   render: ->

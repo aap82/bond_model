@@ -70,6 +70,8 @@ export class DealActions
 
       isFetchingDeal: no
       dealGetByID: action('Fetching Deal By ID', (id) ->
+
+        console.log id
         @isFetchingDeal = yes
         @gql.query('opName', 'dealGetByID', id: id).then((data) =>
           runInAction(=>

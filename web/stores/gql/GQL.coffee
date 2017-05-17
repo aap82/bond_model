@@ -30,6 +30,4 @@ class GQL
 
 
 
-
-
 export default GQL

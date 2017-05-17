@@ -57,32 +57,32 @@ class ModelViewEntry extends React.Component
   constructor: (props) ->
     super props
 
+
+    @submitAddNewDeal = (id, form) =>
+      @props.actions.deal.dealCreate(form.values()).then((result) =>
+        @props.app.toolbar.closePopups() if result
+      )
+    @loadDeal = (id) =>
+      @props.actions.deal.dealGetByID(id).then((result) =>
+        @props.model.loadDeal result if result?
+        @props.app.toolbar.closePopups()
+      )
+
+    @closeDeal = =>
+      @props.model.closeDeal()
+
+
+    @handleClick = (e) =>
+      {tables} = @props.model
+      return unless tables.isCellSelected
+
+      tables.unSelectCell()
+  #    tables.doneEditing() if tables.isEditing
+
   componentDidMount: ->
     @props.actions.deal.dealsGetAllSummary().then((result) =>
       @props.model.deals.replace(result or [])
     )
-
-
-  submitAddNewDeal: (id, form) =>
-    @props.actions.deal.dealCreate(form.values()).then((result) =>
-      @props.app.toolbar.closePopups() if result
-    )
-  loadDeal: (id) =>
-    @props.actions.deal.dealGetByID(id).then((result) =>
-      @props.model.loadDeal result if result?
-      @props.app.toolbar.closePopups()
-    )
-
-  closeDeal: =>
-    @props.model.closeDeal()
-
-
-  handleClick: (e) =>
-    {tables} = @props.model
-    return unless tables.isCellSelected
-
-    tables.unSelectCell()
-#    tables.doneEditing() if tables.isEditing
 
 
 

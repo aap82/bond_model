@@ -28,12 +28,12 @@ class LoanTable extends React.Component
   constructor: (props) ->
     super props
 
-  handleChange: (row, column, value) =>
-    {actions} = @props
-    actions.loans.loanUpdate({_id: row._id, "#{column.key}": value}).then((res) ->
-      if res
-        row[column.key] = value
-    )
+    @handleChange = (row, column, value) =>
+      {actions} = @props
+      actions.loans.loanUpdate({_id: row._id, "#{column.key}": value}).then((res) ->
+        if res
+          row[column.key] = value
+      )
 
 
   render: ->
@@ -48,8 +48,7 @@ class LoanTable extends React.Component
         handleChange: @handleChange
         contextMenu:
           body: yes
-      crel LoanTableBodyContextMenu,
-        tables: tables
+
 
 
 

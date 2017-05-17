@@ -8,16 +8,18 @@ FormContainer = observer(class FormContainer extends React.Component
   constructor: (props) ->
     super props
 
+    @handleSubmit = (e) =>
+      {id, onSubmit} = @props
+
+      @props.form.onSubmit(e, {
+        onSuccess: ((form) -> onSubmit(id, form))
+        onError: ((form) -> form.invalidate())
+      })
+
+
+
   componentWillMount: -> @props.form.set(@props.form.defaults())
   componentWillUnmount: -> @props.form.clear()
-  handleSubmit: (e) =>
-    {id, onSubmit} = @props
-
-    @props.form.onSubmit(e, {
-      onSuccess: ((form) -> onSubmit(id, form))
-      onError: ((form) -> form.invalidate())
-    })
-
 
   render: ->
     {onCancel} = @props

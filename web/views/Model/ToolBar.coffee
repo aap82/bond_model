@@ -20,9 +20,9 @@ SelectDealSection = observer(class extends React.Component
       }
 
 
-    handleChange: (e) => @selectedID = e.target.value
+      @handleChange = (e) => @selectedID = e.target.value
+      @handleSubmit = => @props.onSubmit(@selectedID) if @selectedID isnt ''
 
-    handleSubmit: => @props.onSubmit(@selectedID) if @selectedID isnt ''
     render: ->
       {model} = @props
       div className: 'ui form', =>

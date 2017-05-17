@@ -39,6 +39,7 @@ TableCell = observer(({
     return ctrlKeyClick() if e.ctrlKey
     tables.selectCell(tableId, row, column)
   )
+
   unSelectedDoubleClick = ((e) ->
     e.stopPropagation()
     e.preventDefault()
@@ -55,8 +56,10 @@ TableCell = observer(({
     e.stopPropagation()
     e.preventDefault()
     tables.doneEditing()
-
   )
+
+
+
   if not column.selectable
     return td className: alignClass, "#{tables.formatValue(column, row[column.key])}"
   else if !isSelected
@@ -77,12 +80,16 @@ TableCell = observer(({
 
 
 EditingCell = observer(class extends React.Component
-  componentWillMount: =>
+  constructor: (props) ->
+    super props
+    @focus = => @textInput.focus()
+
+  componentWillMount: ->
     {tables, row, column} = @props
     tables.inputValue = row[column.key]
     return
-  componentDidMount: => @focus()
-  focus: => @textInput.focus()
+  componentDidMount: -> @focus()
+
   render: ->
     {tables, row, column} = @props
     {inputValueChange} = tables
