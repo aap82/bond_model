@@ -1,6 +1,4 @@
-exports = module.exports
-
-exports.dealSettingsFragment = "
+export dealSettingsFragment = "
 
   fragment dealSettings on DealSetting {
       _id

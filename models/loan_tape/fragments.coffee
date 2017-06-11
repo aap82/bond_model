@@ -1,5 +1,5 @@
 
-exports.loanTapeSummaryFragment = "
+export loanTapeSummaryFragment = "
   fragment loanSummary on LoanTape {
       _id
       seller
@@ -10,7 +10,7 @@ exports.loanTapeSummaryFragment = "
     }
 "
 
-exports.loanTapeDetailsFragment = "
+export loanTapeDetailsFragment = "
   fragment loanDetail on LoanTape {
        _id
       seller

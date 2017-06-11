@@ -29,3 +29,13 @@
   background: #E0E0E0!important;
   color: rgba(0,0,0,.95)!important;
 }
+
+.ui.compact.table thead th.sorted.right.aligned {
+  margin-left: 5em!important;
+  padding-left: .2em;
+  padding-right: .2em;
+}
+
+td.toggle {
+  width: 25.26px;
+}

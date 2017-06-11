@@ -1,29 +1,22 @@
 require('dotenv').config()
 require('./mongoose')
-getenv = require('getenv')
+import getenv from 'getenv'
 
 SERVER_HOST = getenv 'SERVER_HOST'
 SERVER_PORT = getenv 'SERVER_PORT'
 
 
 
-koa = require('koa')
-koaBody = require 'koa-bodyparser'
+import koa from 'koa'
+import koaBody from 'koa-bodyparser'
+import { baseErrorHandling  } from './middleware/basic'
+import {graphql} from './graphql'
+
+
 app = new koa()
 app.use koaBody()
 
-
-{ baseErrorHandling  } = require './middleware/basic'
-
-
-
-
-
-
-
 app.use baseErrorHandling()
-
-graphql = require './graphql'
 app.use graphql.routes()
 app.use graphql.allowedMethods()
 

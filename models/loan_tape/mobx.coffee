@@ -1,24 +1,45 @@
-import mobx, {extras,extendObservable, observable, computed, runInAction, action, toJS} from 'mobx'
+import mobx, {autorun, extras,extendObservable, observable, computed, runInAction, action, toJS} from 'mobx'
+import {loanCashFlow} from '../../web/stores/model/loanCashflow'
 
+export class Loan
+  constructor: (props) ->
+    @dates =
+      settlement: (new Date("7/20/17")).toUTCString()
+      firstPayment: (new Date("8/15/17")).toUTCString()
+      pricing: (new Date("5/5/22")).toUTCString()
 
-export class Deal
-  constructor: ->
     extendObservable @, {
-      _id: null
-      seller: ''
-      name: ''
-      oBal: 0
-      cBal: 0
-      coupon: 0
-      adminRate: 0
-      term: 0
-      amort: 0
-      io: 0
-      open: 0
-      loanAge: 0
-      isAct360: yes
-      dealID: null
-        
+      _id: props._id or ''
+      seller: props.seller or ''
+      name: props.name or 0
+      oBal: props.oBal or 0
+      cBal: props.cBal or 0
+      coupon: props.coupon or 0.000
+      adminRate: props.adminRate or 4.000
+      term: props.term or 120
+      amort: props.amort or 360
+      io: props.io or 0
+      open: props.open or 4
+      loanAge: props.loanAge or 2
+      isAct360: props.isAct360 or yes
+      dealID: props.dealID or ''
+      include: yes
+      current: 0
+
+      cashflow: action(->
+        runInAction(=>
+          @current =  loanCashFlow(@dates, @, no, yes)
+          return @current
+        )
+      )
+
+      updateProps: action((prop, value) =>
+        @[prop] = value
+      )
+      toggle: action(->
+        @include = !@include
+      )
+
 
       reset: action('Reset deal to default', (->
           runInAction(=>
@@ -69,7 +90,13 @@ export class Deal
           bondIDs: mobx.toJS(@bondIDs)
         )
       )
+
+
+
+
     }
+
+
 
 
 

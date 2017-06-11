@@ -3,7 +3,7 @@
 @import 'styles/flexbox-grid.scss';
 @import 'styles/data-grid-overrides';
 @import 'styles/sematantic_ui_overrides';
-
+@import '../node_modules/handsontable/dist/handsontable.full.css';
 
 html {
   box-sizing: border-box;
@@ -52,17 +52,16 @@ html, body, #root {
   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.3);
 }
 h1, h2, h3, h4, h5, h6 {
+  margin-top: 0px!important;
   margin-bottom: 0px!important;
 }
 
 .top-bar {
   height: 65px;
-  width: 100%;
   background: #1B1C1D;
   color: white;
   padding: {
     left: 10px;
-    right: 500px;
   }
 
 
@@ -70,32 +69,44 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+td.active.editing > div {
+  width: 100%;
+  input {
+    color: red!important;
+    border: {
+      style: none!important;
+      width: 0px!important;
 
+    }
 
-
-.selected-cell {
-  padding: {
-    bottom: 4px!important;
   }
 
-
-
-  border-bottom: {
-    width: 1px;
-    style: solid;
-    color: blue;
-  }
+}
+.editable {
+  color: blue!important;
+}
+.disabled.editable {
+  color: rgba(40,40,40,.3)!important;
 }
 
-.editing-cell {
-  padding: {
-    left: 0.45rem!important;
-    bottom: 3px!important;
+.toggle-icon {
+  margin: {
+    left: 10px;
+    right: 0px;
   }
-  border-bottom: {
-    style: solid;
-    width: 1px;
-    color: red;
-  }
+  cursor: pointer!important;
+}
 
+.header-title {
+
+}
+
+.loan-table {
+  font-size: 13px!important;
+}
+
+table {
+  font-size: 12px!important;
+  //@extend .ui;
+  //@extend .table;
 }

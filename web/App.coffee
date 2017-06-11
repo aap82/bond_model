@@ -26,16 +26,17 @@ class App extends React.Component
 #        paddingTop: 5
     div =>
       crel DevTools, options
-      crel LeftNav
-      div style: style.main, =>
-        crel Route,
-          path: '/'
-          component: Home
-          exact: yes
-        crel Route,
-          path: '/model'
-          component: Model
-          exact: yes
+      crel Model
+#      crel LeftNav
+#      div style: style.main, =>
+#        crel Route,
+#          path: '/model'
+#          component: Model
+#          exact: yes
+#        crel Route,
+#          path: '/model'
+#          component: Model
+#          exact: yes
 
 
 

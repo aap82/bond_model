@@ -1,7 +1,7 @@
-{dealSettingsFragment} = require '../deal_settings/fragments'
-{loanTapeDetailsFragment} = require '../loan_tape/fragments'
+import {dealSettingsFragment} from '../deal_settings/fragments'
+import {loanTapeDetailsFragment} from '../loan_tape/fragments'
 
-exports.dealSummaryFragment = "
+export dealSummaryFragment = "
   fragment dealSummary on Deal {
       _id
       dealID
@@ -14,7 +14,7 @@ exports.dealSummaryFragment = "
 "
 
 
-exports.dealDetailsFragment = "
+export dealDetailsFragment = "
   #{dealSettingsFragment}
   #{loanTapeDetailsFragment}
   fragment dealDetails on Deal {

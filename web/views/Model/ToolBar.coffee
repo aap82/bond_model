@@ -14,17 +14,17 @@ import DropDown from 'forms/components/DropDown'
 SelectDealSection = observer(class extends React.Component
     constructor: (props) ->
       super props
-      console.log props.model.deal
-      extendObservable @, {
-        selectedID: props.model.deal._id or ''
-      }
 
+      extendObservable @, {
+        selectedID: props.model.id or ''
+      }
 
       @handleChange = (e) => @selectedID = e.target.value
       @handleSubmit = => @props.onSubmit(@selectedID) if @selectedID isnt ''
 
     render: ->
       {model} = @props
+
       div className: 'ui form', =>
         div className: 'field', =>
           label 'Select Deal'
@@ -52,40 +52,40 @@ AddNewDealForm  = inject('forms')(observer(({id, forms, onSubmit, onCancel}) ->
 
 
 ToolBarDefault = observer(({
-  model,
+  models,
   onNewDealSubmit
   onLoadDealSubmit
   onCloseDeal
-  toolbar
+  topBar
 }) ->
-  {openPopup, closePopups} = toolbar
+  {openPopup, closePopups} = topBar
   LoadDealTrigger = crel Menu.Item,
     name: 'loadDeal'
   AddDealTrigger = crel Menu.Item,
     icon: 'plus'
     name: 'addNewDeal'
   div className: 'row middle between top-bar z-depth-2', ->
-    h1 "Model Page"
+#    h1 "Model Page"
     crel Menu,
       inverted: yes,
       floated: 'right',
       =>
-        switch model.deal._id
-          when null
+        switch models.loans.length
+          when 0
             crel ControlledPopup,
               id: 'dealOpen',
-              store: toolbar
+              store: topBar
               openID: 'popupID'
-              position: 'bottom right'
+              position: 'bottom left'
               trigger: LoadDealTrigger
               handleOpen: openPopup
               handleClose: closePopups, ->
                 crel SelectDealSection,
-                  model: model
+                  model: models
                   onSubmit: onLoadDealSubmit
             crel ControlledPopup,
               id: 'dealCreate',
-              store: toolbar
+              store: topBar
               openID: 'popupID'
               handleOpen: openPopup
               trigger: AddDealTrigger, ->
@@ -94,10 +94,13 @@ ToolBarDefault = observer(({
                   onSubmit: onNewDealSubmit
                   onCancel: closePopups
           else
-            div ->
-              crel Menu.Item,
-                name: 'closeDeal'
-                onClick: onCloseDeal
+            div className: "row middle start", ->
+#              div ->
+#                h1 "#{models.model.view.deal.name.toUpperCase()}"
+              div ->
+                crel Menu.Item,
+                  name: 'closeDeal'
+                  onClick: onCloseDeal
 
 
 

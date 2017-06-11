@@ -1,16 +1,15 @@
-composeWithMongoose = require('graphql-compose-mongoose').default
-LoanTape = require './mongoose'
+import {composeWithMongoose} from 'graphql-compose-mongoose'
+import LoanTape from './mongoose'
 
-exports = module.exports
-exports.TC =
+export TC =
   LoanTapeTC: composeWithMongoose(LoanTape)
 
 
 
 
-{loanTapeSummaryFragment, loanTapeDetailsFragment} = require './fragments'
+import {loanTapeSummaryFragment, loanTapeDetailsFragment} from './fragments'
 
-exports.queriesANDmutations = [
+export queriesANDmutations = [
   "#{loanTapeSummaryFragment}
     query getLoans {
       loans {

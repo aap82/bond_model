@@ -1,84 +1,90 @@
 import React from 'react'
 import {crel, div, input,  td, tr, thead, th, tbody} from 'teact'
+import {extendObservable, action, computed} from 'mobx'
 import {inject, observer} from 'mobx-react'
 import TableHeader from './Header'
+import TableFooter from './Footer'
 import TableBody from './Body'
+import {clone, getSnapshot, applySnapshot} from 'mobx-state-tree'
+import {
+  HOME, END,  ESCAPE, F2, SHIFT, CTRL, LEFT_ARROW, SPACE_BAR, DOWN_ARROW, d, z, y
+} from 'utils/keycodes'
 
 
-class Table extends React.Component
+Table = observer(class  extends React.Component
   constructor: (props) ->
     super props
+    extendObservable @, {
+      shiftKey: no
+      ctrlKey: no
+      listening: computed(->
+        count = 0
+        count++ if @shiftKey
+        count++ if @ctrlKey
+        return count
+      )
+      keyPress: action((key, state) ->
+        switch key
+          when SHIFT then @shiftKey = state
+          when CTRL then @ctrlKey = state
 
+      )
+    }
 
     @handleKeyBoardInput = (e) =>
-      {tableId, tables} = @props
-      return if tableId isnt tables.selected.table
-      return if e.keyCode not in [13, 27, 37, 39, 113, 40, 38]
-      return if tables.isEditing unless e.keyCode in [13,27,113]
-      switch e.keyCode
-        when 13
-          if tables.isEditing
-            @handleInputSubmit()
-          else
-            tables.moveDown()
-        when 113
-          if tables.isEditing
-            tables.doneEditing()
-          else
-            tables.startEditing()
-        when 27
-          if tables.isEditing
-            tables.doneEditing()
-          else
-            tables.unSelectCell()
-        when 37 then tables.moveLeft()
-        when 38 then tables.moveUp()
-        when 39 then tables.moveRight()
-        when 40 then tables.moveDown()
-        else return
+      {table} = @props
+      return if not table.isSelected or table.editing
+      if e.keyCode in [SHIFT, CTRL]
+        document.addEventListener('keyup', @handleKeyUp) if @listening is 0
+        @keyPress(e.keyCode, yes)
+      else if @ctrlKey and e.keyCode in [d, z, y]
+        ctrlKeyActions(e, table)
+      else if e.keyCode in [LEFT_ARROW..DOWN_ARROW] or e.keyCode in [HOME, END]
+        table.arrowKey(e.keyCode,@shiftKey, @ctrlKey)
+      else if e.keyCode in [SPACE_BAR] then table.toggleSelectedRows()
+      else
+        switch e.keyCode
+          when F2 then table.startEditing()
+          when ESCAPE then table.stopEditing()
+          else return
 
 
-    @handleInputSubmit = =>
-      {tables, handleChange} = @props
-      {selected, inputValue} = tables
-      handleChange(selected.row, selected.column, inputValue)
-      tables.doneEditing()
-    @onContextMenu =  (e) =>
-      return unless @props.contextMenu?
-      {tables} = @props
-      return unless tables.selected.rows.length > 0
-      e.stopPropagation()
-      e.preventDefault()
-      console.log 'context menu'
+    @handleKeyUp = (e) =>
+      if e.keyCode in [16,17]
+        document.removeEventListener('keyup', @handleKeyUp) if @listening is 1
+        @keyPress(e.keyCode, no)
+        return
 
 
-    @handleTableClick = (e) =>
-      e.stopPropagation()
-      e.preventDefault()
 
-  componentDidMount: ->
-    document.addEventListener('keydown', @handleKeyBoardInput)
-
-  componentWillUnmount: ->
-
-    document.removeEventListener('keydown',@handleKeyBoardInput)
-
+  componentDidMount: -> document.addEventListener('keydown', @handleKeyBoardInput)
+  componentWillUnmount: -> document.removeEventListener('keydown',@handleKeyBoardInput)
 
   render: ->
-    {tableId, tables, table, contextMenu } = @props
-    {rows, columns} = table
+    {table, contextMenu} = @props
     crel 'table',
-      onClick: @handleTableClick
-      className: 'ui compact unstackable celled selectable striped small table ',
+      className: 'ui small complex compact sortable unstackable celled selectable striped table ',
       =>
-
-        crel TableHeader, columns: columns
+        crel TableHeader, table: table
         crel TableBody,
-          tableId: tableId
-          tables: tables
-          columns: columns
-          rows: rows
-          contextMenu: contextMenu
+          table: table
+          contextMenu: contextMenu.body
+        if table.footer
+          crel TableFooter,
+            table: table
 
-
+)
 export default Table
+
+
+ctrlKeyActions = (e, table) =>
+  e.preventDefault()
+  if e.keyCode in [z,y]
+    switch e.keyCode
+      when z then table.undo()
+      when y then table.redo()
+  else
+    switch e.keyCode
+      when d
+        table.edit('copyDown', {selection: yes}) unless (table.selected.columns.length is 1) and (table.columns[table.selected.columns[0]].editable isnt yes)
+

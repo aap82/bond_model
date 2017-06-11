@@ -24,6 +24,6 @@ module.exports =
   builds:
     dev:
       client:     path.join root, 'build'
-      server:     path.join root, 'build', 'server'
+      server:     path.join root, 'server-build'
     prod:         path.join root, 'dist'
 

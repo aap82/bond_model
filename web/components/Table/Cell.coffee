@@ -1,80 +1,91 @@
 import React from 'react'
-import {crel, div, tr, td} from 'teact'
+import {crel, div, tr, td,input} from 'teact'
 import {expr} from 'mobx'
 import {observer} from 'mobx-react'
+import {getSnapshot, applySnapshot, clone} from 'mobx-state-tree'
+import cx from 'classnames'
 
 
 
-TableCell = observer(({
-  tableId,
-  tables,
-  column,
-  row,
-}) ->
-  {alignClass} = column
-  isSelected = expr(->
-    tables.selected.row is row and
-    tables.selected.column is column and
-    tables.selected.rows.length is 1
-  )
+TableCell = observer((props) ->
+  {column} = props
 
-
-  shiftKeyClick = ->
-    tables.selectRowsTo(row)
-
-
-
-  ctrlKeyClick = ->
-    if row in tables.selected.rows
-      tables.unSelectRow(row)
-    else
-      tables.selectRow(row)
-
-
-
-  unSelectedClick = ((e) ->
-    e.stopPropagation()
-    e.preventDefault()
-    return shiftKeyClick() if e.shiftKey
-    return ctrlKeyClick() if e.ctrlKey
-    tables.selectCell(tableId, row, column)
-  )
-
-  unSelectedDoubleClick = ((e) ->
-    e.stopPropagation()
-    e.preventDefault()
-    tables.selectCell(tableId, row, column)
-    tables.startEditing()
-  )
-  selectedSingleOrDoubleClick = ((e) ->
-    e.stopPropagation()
-    e.preventDefault()
-    if column.editable then tables.startEditing()
-
-  )
-  onEditingClick = ((e) ->
-    e.stopPropagation()
-    e.preventDefault()
-    tables.doneEditing()
-  )
-
-
-
-  if not column.selectable
-    return td className: alignClass, "#{tables.formatValue(column, row[column.key])}"
-  else if !isSelected
-    return td onClick: unSelectedClick, onDoubleClick: unSelectedDoubleClick, className: alignClass, "#{tables.formatValue(column, row[column.key])}"
-  else if tables.isEditing and column.editable
-    return crel EditingCell,
-      tables: tables
-      row: row
-      column: column
-      onClick: onEditingClick
+  if column.type is 'toggle'
+    crel ToggleCell, props
   else
-    className = alignClass + ' selected-cell'
-    return td onClick: selectedSingleOrDoubleClick, onDoubleClick: selectedSingleOrDoubleClick,  className: className, "#{tables.formatValue(column, row[column.key])}"
+    crel SelectableCell, props
 
 )
+
+
+SelectableCell = observer(({
+  table
+  column
+  row
+}) ->
+  {data} = row
+  {alignClass} = column
+  isSelected = expr(-> row.selected and column.selected and row.included and table.isSelected)
+  isEditing = expr(-> isSelected and table.editing)
+  className = cx(
+    "#{alignClass}": yes
+    active: isSelected
+    disabled: !row.included
+    editable: column.editable
+    
+  )
+
+
+  handleMouseDown = ((e) ->
+    return unless e.nativeEvent.which is 1
+    e.stopPropagation()
+    e.preventDefault()
+    switch
+      when isSelected and table.selected.single then table.startEditing() if column.editable
+      else table.selectCell(row, column)
+  )
+
+  handleMouseEnter = ((e) ->
+    return unless table.selecting
+    e.stopPropagation()
+    e.preventDefault()
+    switch isSelected
+      when no then table.addSelectedCell(row, column)
+      else table.removeSelectedCell(row, column)
+
+  )
+
+  if isEditing
+    crel EditingCell,
+      table: table
+      row: clone(data)
+      column: column
+      onSubmit: ((newData) ->
+        return if data[column.key] is newData[column.key]
+        table.edit('updateCell', {
+          key: column.key
+          data: data
+          update: getSnapshot(newData)
+        })
+
+      )
+  else
+    td onMouseDown: handleMouseDown, onMouseEnter: handleMouseEnter, className: className, "#{column.format(data[column.key])}"
+
+)
+
+ToggleCell = observer(({row, column, table}) ->
+  {selected} = table
+  isSelected = expr(-> row.selected and column.selected and selected.columns.length is 1)
+  toggleRow = (->row.toggle())
+  className = cx(
+    active: isSelected
+    toggle: yes
+  )
+  td onClick: toggleRow, className: className, ->
+    input type: 'checkbox', checked: row.included, onChange: (->)
+)
+
 
 
 
@@ -84,25 +95,39 @@ EditingCell = observer(class extends React.Component
     super props
     @focus = => @textInput.focus()
 
-  componentWillMount: ->
-    {tables, row, column} = @props
-    tables.inputValue = row[column.key]
-    return
-  componentDidMount: -> @focus()
+    @handleChange = (e) =>
+      {row, column} = @props
+      value = if e.target.value is "" then 0 else column.parse(e.target.value)
+      row.edit(column.key, value)
+
+    @handleKeyBoardInput = (e) =>
+      return unless e.keyCode in [13, 27]
+      {table, row} = @props
+      return table.stopEditing() if e.keyCode is 27
+      if e.keyCode is 13
+        @props.onSubmit(row)
+        table.stopEditing()
+
+
+  componentDidMount: ->
+    @focus()
+    document.addEventListener('keydown', @handleKeyBoardInput)
+
+  componentWillUnmount: ->  document.removeEventListener('keydown',@handleKeyBoardInput)
 
   render: ->
-    {tables, row, column} = @props
-    {inputValueChange} = tables
+    {row, column} = @props
     {alignClass} = column
-    td className: alignClass + ' editing-cell', =>
+    value = if row[column.key] is 0 then "" else row[column.key]
+    td className: alignClass + ' active editing', =>
       div className: 'ui fluid tiny transparent input focus', =>
         crel 'input',
-          placeholder: tables.formatValue(column, row[column.key]),
-          value: tables.inputValue,
+          placeholder: column.format(column, row[column.key]),
+          value: value,
           ref: ((input) => @textInput = input),
           className: alignClass,
-          onChange: inputValueChange
-)
+          onChange: @handleChange
+  )
 
 TableCell.displayName = 'TableCell'
 

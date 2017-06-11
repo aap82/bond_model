@@ -1,7 +1,7 @@
-getenv = require('getenv')
-models = require('../models/mongoose')
-mongoose = require('mongoose')
-promise = require('bluebird')
+import getenv from 'getenv'
+import models from '../models/mongoose'
+import mongoose from 'mongoose'
+import promise from 'bluebird'
 
 mongoose.Promise = promise
 

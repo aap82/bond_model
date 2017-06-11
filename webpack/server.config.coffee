@@ -9,7 +9,6 @@ devConfig =
   target: 'node'
   entry: "#{paths.entry.server}"
   output:
-    libraryTarget:  'commonjs2'
     filename: 'server.js'
     path: paths.builds.dev.server
 
@@ -22,8 +21,6 @@ devConfig =
     ]
   plugins: [
     new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('development')})
-    new webpack.NamedModulesPlugin()
-    new webpack.NoEmitOnErrorsPlugin()
     new webpack.optimize.OccurrenceOrderPlugin()
 
   ]

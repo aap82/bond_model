@@ -1,44 +1,49 @@
 import React from 'react'
+import cx from 'classnames'
+import {expr} from 'mobx'
 import {crel, div, input,  td, tr, thead, th, tbody} from 'teact'
 import {inject, observer} from 'mobx-react'
-import TableHeader from './Header'
-import TableRow from './Row'
 import TableCell from './Cell'
+import {ContextMenuTrigger, ContextMenu} from 'react-contextmenu';
 
 
 
-class TableBody extends React.Component
+TableBody = observer(class  extends React.Component
   constructor: (props) ->
     super props
 
 
     @onContextMenu =  (e) ->
+
       console.log 'context menu'
-      return unless @props.contextMenu?
-      {tables} = @props
-      return unless tables.selected.rows.length > 0
+
+    @onMouseUp = (e) =>
+      return unless @props.table.selecting
       e.stopPropagation()
       e.preventDefault()
-      console.log 'context menu'
+      @props.table.stopSelecting()
 
 
   render: ->
-    {tableId, tables, rows, columns, contextMenu} = @props
-    crel 'tbody',
-      =>
-        for row, i in rows
-          crel TableRow,
-            tableId: tableId
-            tables: tables
-            row: row
-            contextMenu: contextMenu
-            =>
-              for column in columns
-                crel TableCell,
-                  tableId: tableId
-                  tables: tables
-                  row: row
-                  column: column
+    {table, contextMenu} = @props
+    {rows, columns} = table
+    crel 'tbody', onMouseUp: @onMouseUp, =>
+      for row, i in rows
+        crel ContextMenuTrigger,
+          renderTag: 'tr'
+          id: contextMenu
+          attributes:
+            className: 'compact collapsing'
+            onContextMenu: @onContextMenu
+          =>
+
+#        tr className: 'collapsing', =>
+            for column, j in columns
+              crel TableCell,
+                table: table
+                row: row
+                column: column
 
 
+)
 export default TableBody

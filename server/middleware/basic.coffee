@@ -1,14 +1,14 @@
-async = require('asyncawait/async')
-awaits = require('asyncawait/await')
-compose = require  'koa-compose'
+#async = require('asyncawait/async')
+#awaits = require('asyncawait/await')
+import compose from 'koa-compose'
 
-compress = require  'koa-compress'
+import compress from 'koa-compress'
 
 
-exports.baseErrorHandling = ->
-  async (ctx, next) =>
+export baseErrorHandling = ->
+  (ctx, next) =>
     try
-      awaits next()
+      await next()
     catch err
       console.error "BASE ERROR HANDLING: #{err.name} : #{err.message}"
       ctx.body = { name: err.name, message: err.message, stack: err.stack }
@@ -16,7 +16,7 @@ exports.baseErrorHandling = ->
 
 
 
-exports.compressResponse = ->
+export compressResponse = ->
   return compress()
 
 #mount = require  'koa-mount'

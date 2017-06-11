@@ -1,6 +1,6 @@
 import mobx, {extras,extendObservable, observable, computed, runInAction, action, toJS} from 'mobx'
 import GQL from './gql'
-import DealStore from 'models/deal/mobx'
+
 
 class AppStore
   constructor: (gqlFetch) ->

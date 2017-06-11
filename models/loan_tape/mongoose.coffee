@@ -1,5 +1,5 @@
-mongoose = require('mongoose')
-Schema = mongoose.Schema
+import mongoose, {Schema} from 'mongoose'
+
 
 LoanTapeSchema = new Schema({
   seller:
@@ -71,7 +71,8 @@ LoanTapeSchema = new Schema({
   collection: 'loan_tapes'
 )
 
-module.exports = mongoose.model 'LoanTape', LoanTapeSchema
+LoanTape = mongoose.model 'LoanTape', LoanTapeSchema
+export default LoanTape
 
 
 

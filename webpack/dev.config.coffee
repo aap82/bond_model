@@ -18,7 +18,7 @@ GRAPHQL_ENDPOINT = getenv 'GRAPHQL_ENDPOINT'
 DEV_SERVER_URL = 'http://' + DEV_SERVER_HOST + ':' + DEV_SERVER_PORT
 APP_SERVER_URL = 'http://' + '0.0.0.0'+ ':' + APP_SERVER_PORT + '/graphql'
 
-
+WebpackBundleSizeAnalyzerPlugin = require('webpack-bundle-size-analyzer').WebpackBundleSizeAnalyzerPlugin
 devConfig =
   entry:
     app: [
@@ -31,6 +31,8 @@ devConfig =
       'react'
       'react-dom'
       'teact'
+      'mobx'
+      'mobx-react'
     ]
 
   output:
@@ -43,6 +45,12 @@ devConfig =
   devServer:
     hot: yes
     host: "#{DEV_SERVER_HOST}"
+    stats: 'errors-only'
+    lazy: no
+    headers:
+      'Access-Control-Allow-Origin': '*'
+
+
     contentBase: paths.builds.dev.client
     port: DEV_SERVER_PORT
     inline: yes
@@ -59,9 +67,39 @@ devConfig =
     historyApiFallback: yes
   module:
     rules: [
-      { test: /\.coffee$/, use: [ 'babel-loader', 'coffee-loader'  ], exclude: /node_modules/ }  #{ test: /\.coffee$/, loader: ['happypack/loader?id=coffee'], exclude: /node_modules/ } # ,include: paths.src }
+      {
+        test: require.resolve('numbro'),
+        use: [{
+          loader: 'expose-loader',
+          options: 'numbro'
+        }]
+      },
+#      {
+#        test: require.resolve('moment'),
+#        use: [{
+#          loader: 'expose-loader',
+#          options: 'moment'
+#        }]
+#      },
+      {
+        test: require.resolve('pikaday'),
+        use: [{
+          loader: 'expose-loader',
+          options: 'Pikaday'
+        }]
+      },
+      {
+        test: require.resolve('zeroclipboard'),
+        use: [{
+          loader: 'expose-loader',
+          options: 'ZeroClipboard'
+        }]
+      }
+      { test: /\.coffee$/, loader: ['happypack/loader?id=coffee'], exclude: /node_modules/ } # ,include: paths.src } #{ test: /\.coffee$/, use: [ 'babel-loader', 'coffee-loader'  ], exclude: /node_modules/ }
       { test: /\.(js|jsx)$/, loader: ['happypack/loader?id=js'], exclude: /node_modules/ } #, include: paths.src},
       { test: /\.(css|scss)$/, use: ['style-loader','css-loader', 'sass-loader'] }
+
+
     ]
   plugins: [
     new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('development')})
@@ -74,10 +112,10 @@ devConfig =
       id: 'js'
       loaders: [ 'babel-loader' ],
     })
-#    new HappyPack({
-#      id: 'coffee'
-#      loaders: [ 'babel-loader', 'coffee-loader'  ],
-#    })
+    new HappyPack({
+      id: 'coffee'
+      loaders: [ 'babel-loader', 'coffee-loader'  ],
+    })
 
     new webpack.HotModuleReplacementPlugin()
     new webpack.NamedModulesPlugin()
@@ -92,7 +130,7 @@ devConfig =
       template: paths.entry.html
 
     }
-
+    new WebpackBundleSizeAnalyzerPlugin('./plain-report.txt')
   ]
 
 config = merge(devConfig, baseConfig)
